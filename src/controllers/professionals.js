@@ -1,27 +1,29 @@
 const {Professionals} = require('../models');
+const jsonwebtoken = require('jsonwebtoken');
+require('dotenv').config();
 
 async function getProfessionals(req, res) {
     try {
-        const produtos = await Professionals.findAll()
+        const professionals = await Professionals.findAll()
 
         return res.send(professionals)
     } catch (error) {
         console.error(error)
         return res.status(500).send('Erro ao buscar profissional')
-        
     }
     
 }
 
 async function createProfessionals(req, res) {
     try {
-        await Professionals.create(req.body)
-        res.status(201).send('Parabéns! Usuário profissional criado com sucesso');
+        const professional = await Professionals.create(req.body)
+        const token = jsonwebtoken.sign({ id: professional.id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
+        res.send({token});
     } catch (error) {
         console.error(error);
-        res.status(500).send ({
+        res.status(500).send({
             error: error.message
-        })
+})
     }
 }
 

@@ -49,6 +49,7 @@ function validateDeleteProfessionals(req, res, next){
     next();
 }
 
+
 module.exports = {
     validateCreateProfessionals,
     validateDeleteProfessionals
