@@ -1,3 +1,4 @@
+
 const{User} = require('../models');
 const bcrypt= require('bcrypt');
 async function validateCreateUser(req, res, next) {

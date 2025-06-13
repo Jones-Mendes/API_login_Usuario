@@ -1,5 +1,6 @@
 const sequelize = require("../config/database");
 const User = require('./users');
+const Professionals = require('./professionals')
 
 sequelize.sync({alter: true})
 .then(() => {
@@ -10,5 +11,5 @@ sequelize.sync({alter: true})
 });
 
 module.exports = {
-    User
+    User, Professionals
 };
