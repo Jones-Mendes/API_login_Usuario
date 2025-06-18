@@ -1,33 +1,47 @@
+const jwt = require('jsonwebtoken');
+const { User } = require('../models');
+require('dotenv').config();
+const bcrypt = require('bcrypt');
 
-const{User} = require('../models');
-const bcrypt= require('bcrypt');
-async function validateCreateUser(req, res, next) {
-    const {name, email, password} = req.body;
+async function login(req, res) {
+    const { email, password } = req.body;
 
-    if (!name || !email || !password) {
-        return res.status(400).send({ error: 'Todos os campos são obrigatórios' });
+    try {
+        const user = await User.findOne({
+            where: {
+                email: email
+            }
+        })
+    
+        if(!user) {
+            return res.status(401).send({
+                error: 'Usuário não encontrado'
+            })
+        }
+    
+        const match = await bcrypt.compare(password, user.password)
+        if(!match) {
+            return res.status(401).send({
+                error: 'Senha incorreta'
+            })
+        }
+
+        const token = jwt.sign(
+            {id: user.id, email: user.email},
+            process.env.JWT_SECRET,
+            {expiresIn: process.env.JWT_EXPIRES_IN}
+        )
+        
+        return res.send({
+            token
+        })
+    } catch (error) {
+        return res.status(500).send({
+            error: error.message
+        })
     }
-
-    if (name.length> 255) {
-        return res.status(400).send({ error: 'Os campos devem ser do tipo string' });
-    }
-
-    if (email.length > 255) {
-        return res.status(400).send({ error: 'Os campos devem ser do tipo string' });
-    }
-
-    const existingUser = await User.findOne({ 
-        where: { 
-            email } });
-    if (existingUser) {
-        return res.status(400).send({ error: 'Email já cadastrado' });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-    req.body.password = hashedPassword;
-    next();
 }
 
 module.exports = {
-    validateCreateUser
-};
+    login
+}

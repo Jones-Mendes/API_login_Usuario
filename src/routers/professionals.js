@@ -8,6 +8,8 @@ router.get('/professionals', authMiddleware.validateToken, professionalsControll
 
 router.post('/professionals', professionalsMiddleware.validateCreateProfessionals, professionalsController.createProfessionals);
 
-router.delete('/professionals/:id', authMiddleware.validateToken, professionalsMiddleware.validateDeleteProfessionals, professionalsController.deleteProfessionals)
+router.delete('/professionals/:id', authMiddleware.validateToken, professionalsMiddleware.validateDeleteProfessionals, professionalsController.deleteProfessionals);
+
+router.put('/professionals/:id', authMiddleware.validateToken, professionalsMiddleware.validateUpdateProfessionals, professionalsController.updateProfessionals);
 
 module.exports = router;

@@ -39,11 +39,26 @@ async function deleteProfessionals(req, res) {
        console.error(error)
        return res.status(500).send('Erro ao deletar profissional') 
     }
-}
 
+    
+}
+async function updateProfessionals(req, res) {
+        const {id} = req.params;
+        try {
+            await Professionals.update(req.body, {
+                where: {id: id}
+            })
+
+            return res.status(202).send('Profissional atualizado com sucesso')
+        } catch (error) {
+           console.error(error)
+           return res.status(500).send('Erro ao atualizar profissional') 
+        }
+    }
 
 module.exports = {
     getProfessionals,
     createProfessionals,
-    deleteProfessionals
+    deleteProfessionals,
+    updateProfessionals
 };

@@ -47,10 +47,22 @@ function validateDeleteProfessionals(req, res, next){
     }
 
     next();
+
 }
 
+
+function validateUpdateProfessionals(req, res, next){
+    const {id} = req.params;
+    const {name, email, password, type, credential} = req.body;
+    if(!id){
+        return res.status(400).send('O ID do profissional é obrigatório')
+    }
+
+    next()
+}
 
 module.exports = {
     validateCreateProfessionals,
-    validateDeleteProfessionals
-}
+    validateDeleteProfessionals,
+    validateUpdateProfessionals
+};

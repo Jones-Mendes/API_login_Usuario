@@ -27,6 +27,41 @@ async function validateCreateUser(req, res, next) {
     next();
 }
 
+async function validateDeleteUser(req, res, next) {
+    const {id} = req.params;
+
+    if (!id) {
+        return res.status(400).send('O ID do usuário é obrigatório');
+    }
+
+    next();
+}
+
+async function validateUpdateUser(req, res, next) {
+    const {id} = req.params;
+    const {name, email, password} = req.body;
+
+    if (!id) {
+        return res.status(400).send('O ID do usuário é obrigatório');
+    }
+
+    if (name && name.length > 255) {
+        return res.status(400).send({ error: 'O nome não pode ter mais de 255 caracteres' });
+    }
+
+    if (email && email.length > 255) {
+        return res.status(400).send({ error: 'O email não pode ter mais de 255 caracteres' });
+    }
+
+    if (password) {
+        req.body.password = await bcrypt.hash(password, 10);
+    }
+
+    next();
+}
+
 module.exports = {
-    validateCreateUser
+    validateCreateUser,
+    validateDeleteUser,
+    validateUpdateUser
 };
